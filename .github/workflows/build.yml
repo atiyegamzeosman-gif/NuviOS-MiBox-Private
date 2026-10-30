@@ -1,0 +1,17 @@
+name: NuviOS Builder
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Build NuviOS
+        run: echo "NuviOS v1.0.9 FINAL Private Build"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NuviOS-APK
+          path: "**/*"
