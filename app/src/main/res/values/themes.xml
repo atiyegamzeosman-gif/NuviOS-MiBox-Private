@@ -1,0 +1,4 @@
+<resources>
+    <style name="Theme.NuviOS" parent="android:Theme.NoTitleBar.Fullscreen">
+    </style>
+</resources>
