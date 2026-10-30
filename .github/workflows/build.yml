@@ -1,4 +1,4 @@
-name: NuviOS Builder - Final
+name: NuviOS Real APK
 on: [push]
 jobs:
   build:
@@ -10,24 +10,21 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Build NuviOS APK Package
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: 8.4
+      - name: Build Real APK
         run: |
-          echo "Building NuviOS Mi Box 4K v1.0.9 FINAL Private"
-          echo "Osman Kale - Akcakoca/Duzce"
-          mkdir -p dist
-          echo "NuviOS Private Build Info" > dist/README.txt
-          echo "Version: 1.0.9 FINAL" >> dist/README.txt
-          echo "Features: Ince EPG 38px, Bos Panel, 5dk Manzara, Hava+Haber, Simdi Calan" >> dist/README.txt
-          echo "Private - Gizli Repo" >> dist/README.txt
-          ls -R app/ > dist/FILE_LIST.txt
-          zip -r dist/NuviOS-MiBox-4K-Private-v1.0.9-FINAL.zip app/ gradle/ .github/ README.md
-          mkdir -p app/build/outputs/apk/debug
-          cp dist/NuviOS-MiBox-4K-Private-v1.0.9-FINAL.zip app/build/outputs/apk/debug/NuviOS-MiBox-4K-Private.apk
-          ls -lh app/build/outputs/apk/debug/ dist/
-      - name: Upload
+          chmod +x gradlew || echo "no gradlew"
+          gradle :app:assembleDebug --no-daemon --stacktrace
+          ls -lh app/build/outputs/apk/debug/ || find . -name "*.apk" -ls
+      - name: Upload Real APK
         uses: actions/upload-artifact@v4
         with:
-          name: NuviOS-MiBox-4K-FINAL-Private
+          name: NuviOS-MiBox-Real-APK
           path: |
-            dist/
-            app/build/outputs/apk/debug/
+            app/build/outputs/apk/debug/*.apk
+            **/*.apk
